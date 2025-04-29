@@ -17,7 +17,14 @@ function App() {
           <Route path="/" element={<Home/>} />
           <Route path="/about" element={<About/>} />
           <Route path="/welcome" element={<WelcomePage/>} />
-          <Route path="/news" element={<News/>} />
+          <Route path="/news" element={<News pageSize={5} />} />
+          <Route path="/business" element={<News pageSize={5} category={"business"} />} />
+          <Route path="/entertainment" element={<News pageSize={5} category={"entertainment"} />} />
+          <Route path="/general" element={<News pageSize={5} category={"general"} />} />
+          <Route path="/health" element={<News pageSize={5} category={"health"} />} />
+          <Route path="/science" element={<News pageSize={5} category={"science"} />} />
+          <Route path="/sports" element={<News pageSize={5} category={"sports"} />} />
+          <Route path="/technology" element={<News pageSize={5} category={"technology"} />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />  
         </Routes>
       </div>  
