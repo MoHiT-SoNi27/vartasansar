@@ -80,23 +80,43 @@ export default class News extends Component {
         "U.S. stocks have become more volatile than Bitcoin, with the S&amp;P 500s seven-day realized volatility surging to 169% compared to Bitcoins 83%. CoinDesk's Christine Lee explores on \"Chart of the Da… [+2 chars]",
     },
   ];
+
   constructor() {
     super();
     console.log("Hello from News Component");
     this.state = {
       articles: [],
       loading: false,
+      page: 1
     };
+  }
+
+  async componentDidMount() {
+    this.setState({ loading: true });
+    let url =
+      "https://newsapi.org/v2/top-headlines?country=us&apiKey=9946f9d5838b4bb5ba730391ccfa4346";
+
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
+
+    this.setState({
+      articles: parsedData.articles,
+      loading: false,
+    });
   }
 
   render() {
     return (
       <div className="container text-center mt-3">
         <h1>Welcome to the News Section!</h1>
-  
+
         <div className="row mt-3">
           {this.articles
-            .filter((element) => element.title && element.description && element.urlToImage) // Filter step
+            .filter(
+              (element) =>
+                element.title && element.description && element.urlToImage
+            ) // Filter step
             .map((element) => {
               return (
                 <div className="col-md-4 mt-3" key={element.url}>
@@ -113,5 +133,4 @@ export default class News extends Component {
       </div>
     );
   }
-  
 }
