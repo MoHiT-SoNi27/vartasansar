@@ -8,7 +8,7 @@ export default class NewsItem extends Component {
       <div>
         <div className="card" style={{ width: '18rem' }}>
           <img src={imageUrl} className="card-img-top" alt="..." style={{ height: "200px", width: "100%", objectFit: "cover" }}
-          />
+          referrerPolicy="no-referrer"/>
           <div className="card-body">
             <h5 className="card-title">{title}</h5>
             <p className="card-text">{description}</p>
