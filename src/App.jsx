@@ -14,13 +14,13 @@ function App() {
       <div className="App">
         <Navbar title="VartaSamachar"/>
         <Routes>
-          <Route path="/" element={<News country={"us"} pageSize={5} category={"general"} />} />
-          <Route path="/business" element={<News country={"us"} pageSize={5} category={"business"} />} />
-          <Route path="/entertainment" element={<News country={"us"} pageSize={5} category={"entertainment"} />} />
-          <Route path="/health" element={<News country={"us"} pageSize={5} category={"health"} />} />
-          <Route path="/science" element={<News country={"us"} pageSize={5} category={"science"} />} />
-          <Route path="/sports" element={<News country={"us"} pageSize={5} category={"sports"} />} />
-          <Route path="/technology" element={<News country={"us"} pageSize={5} category={"technology"} />} />
+          <Route path="/" element={<News country={"us"} pageSize={10} category={"general"} />} />
+          <Route path="/business" element={<News country={"us"} pageSize={10} category={"business"} />} />
+          <Route path="/entertainment" element={<News country={"us"} pageSize={10} category={"entertainment"} />} />
+          <Route path="/health" element={<News country={"us"} pageSize={10} category={"health"} />} />
+          <Route path="/science" element={<News country={"us"} pageSize={10} category={"science"} />} />
+          <Route path="/sports" element={<News country={"us"} pageSize={10} category={"sports"} />} />
+          <Route path="/technology" element={<News country={"us"} pageSize={10} category={"technology"} />} />
 
           <Route path="/about" element={<About/>} />
           <Route path="/welcome" element={<WelcomePage/>} />
@@ -34,4 +34,4 @@ function App() {
 export default App
 
 
-// 9946f9d5838b4bb5ba730391ccfa4346
+// 9946f9d10838b4bb10ba730391ccfa4346

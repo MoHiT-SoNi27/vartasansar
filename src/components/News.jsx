@@ -33,23 +33,23 @@ export default class News extends Component {
   async componentDidUpdate(prevProps) {
     if (prevProps.category !== this.props.category) {
       this.setState({ page: 1 }, () => {
-        this.updateNews();
+        this.updateNews();  
       });
     }
   }
 
-  // updateNews = async () => {
-  //   this.setState({ loading: true });
-  //   let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-  //   let data = await fetch(url);
-  //   let parsedData = await data.json();
+  updateNews = async () => {
+    this.setState({ loading: true });
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
 
-  //   this.setState({
-  //     articles: parsedData.articles,
-  //     totalResults: parsedData.totalResults,
-  //     loading: false,
-  //   });
-  // };
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults,
+      loading: false,
+    });
+  };
 
   handlePrevClick = () => {
     this.setState(
@@ -80,12 +80,15 @@ export default class News extends Component {
               )
               .map((element) => {
                 return (
-                  <div className="col-md-4 mt-3" key={element.url}>
+                  <div className="col-md-3 mt-3" key={element.url}>
                     <NewsItem
                       title={element.title.slice(0, 45)}
                       description={element.description.slice(0, 55)}
                       imageUrl={element.urlToImage}
                       newsUrl={element.url}
+                      author={element.author ? element.author : "Unknown"}
+                      date={new Date(element.publishedAt).toGMTString()}
+                      source={element.source.name}
                     />
                   </div>
                 );
