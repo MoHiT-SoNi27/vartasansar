@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 import PropTypes from "prop-types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default class News extends Component {
   static defaultProps = {
@@ -16,8 +17,8 @@ export default class News extends Component {
     category: PropTypes.string.isRequired,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
@@ -32,6 +33,7 @@ export default class News extends Component {
 
   async componentDidUpdate(prevProps) {
     if (prevProps.category !== this.props.category) {
+      document.title = `${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)} - VartaSamachar`;
       this.setState({ page: 1 }, () => {
         this.updateNews();  
       });
@@ -65,14 +67,34 @@ export default class News extends Component {
     );
   };
 
+  fetchMoreData = async () => {
+    this.setState({ page: this.state.page+1, loading: true });
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+      totalResults: parsedData.totalResults,
+      loading: false,
+    });
+  };
+
   render() {
     return (
       <div className="container text-center mt-3">
-        <h1>Welcome to the News Section!</h1>
-        {this.state.loading && <Spinner />}
+        <h1>VartaSamachar - Top {this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)} Headlines!</h1>
+        {/* {this.state.loading && <Spinner />} */}
+
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={true}
+          loader={this.state.loading && <Spinner />}
+        >
 
         <div className="row mt-3">
-          {!this.state.loading &&
+          {
             this.state.articles
               .filter(
                 (element) =>
@@ -86,7 +108,7 @@ export default class News extends Component {
                       description={element.description.slice(0, 55)}
                       imageUrl={element.urlToImage}
                       newsUrl={element.url}
-                      author={element.author ? element.author : "Unknown"}
+                      author={element.author ? element.author.slice(0, 30) : "Unknown"}
                       date={new Date(element.publishedAt).toGMTString()}
                       source={element.source.name}
                     />
@@ -95,7 +117,9 @@ export default class News extends Component {
               })}
         </div>
 
-        <div
+        </InfiniteScroll>
+
+        {/* <div
           className="container d-flex justify-content-between"
           style={{ marginTop: "7rem" }}
         >
@@ -120,7 +144,7 @@ export default class News extends Component {
           >
             Next &rarr;
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }

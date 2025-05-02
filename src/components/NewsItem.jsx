@@ -11,11 +11,12 @@ export default class NewsItem extends Component {
             className="position-absolute top-0 translate-middle badge rounded-pill bg-danger"
             style={{ left: '85%', zIndex: '1', fontSize: '0.7rem' }}
           >
-            {source}
+            {source.slice(0, 16)}
           </span>
 
           <img
-            src={imageUrl ? imageUrl : "https://via.placeholder.com/200x120.png?text=No+Image"}
+            src={ imageUrl || "https://dummyimage.com/200x120/000/fff&text=No+Image"}
+            onError={(e) => e.target.src = "https://dummyimage.com/200x120/000/fff&text=No+Image"}
             className="card-img-top"
             alt="News"
             style={{ height: "120px", objectFit: "cover" }}
