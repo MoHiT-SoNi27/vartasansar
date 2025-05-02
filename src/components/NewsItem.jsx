@@ -6,7 +6,7 @@ export default class NewsItem extends Component {
 
     return (
       <div>
-        <div className="card" style={{ width: '14rem', fontSize: '0.85rem', margin: '10px' }}>
+        <div className="card" style={{ width: '14rem', fontSize: '0.85rem', margin: '10px',position: 'relative' }}>
           <span
             className="position-absolute top-0 translate-middle badge rounded-pill bg-danger"
             style={{ left: '85%', zIndex: '1', fontSize: '0.7rem' }}
