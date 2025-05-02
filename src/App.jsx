@@ -9,8 +9,9 @@ import LoadingBar from "react-top-loading-bar";
 import { useState } from 'react'
 
 function App() {
-
+  const apiKey = import.meta.env.VITE_NEWS_API_KEY;
   const [progress, setProgress] = useState(0);
+  // console.log("API Key from .env:", apiKey);
 
   return (
     <Router>
@@ -22,13 +23,13 @@ function App() {
           onLoaderFinished={() => setProgress(0)}
         />
         <Routes>
-          <Route path="/" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"general"} />} />
-          <Route path="/business" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"business"} />} />
-          <Route path="/entertainment" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"entertainment"} />} />
-          <Route path="/health" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"health"} />} />
-          <Route path="/science" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"science"} />} />
-          <Route path="/sports" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"sports"} />} />
-          <Route path="/technology" element={<News setProgress={setProgress} country={"us"} pageSize={10} category={"technology"} />} />
+          <Route path="/" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"general"} />} />
+          <Route path="/business" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"business"} />} />
+          <Route path="/entertainment" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"entertainment"} />} />
+          <Route path="/health" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"health"} />} />
+          <Route path="/science" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"science"} />} />
+          <Route path="/sports" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"sports"} />} />
+          <Route path="/technology" element={<News setProgress={setProgress} apiKey = {apiKey} country={"us"} pageSize={10} category={"technology"} />} />
 
           <Route path="/about" element={<About />} />
           <Route path="/welcome" element={<WelcomePage />} />
