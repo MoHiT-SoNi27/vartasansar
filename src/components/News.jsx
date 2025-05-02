@@ -33,10 +33,21 @@ export default class News extends Component {
 
   async componentDidUpdate(prevProps) {
     if (prevProps.category !== this.props.category) {
-      document.title = `${this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)} - VartaSamachar`;
-      this.setState({ page: 1 }, () => {
-        this.updateNews();  
-      });
+      document.title = `${
+        this.props.category.charAt(0).toUpperCase() +
+        this.props.category.slice(1)
+      } - VartaSamachar`;
+
+      this.setState(
+        {
+          page: 1,
+          articles: [], // reset articles
+          totalResults: 0,
+        },
+        () => {
+          this.updateNews();
+        }
+      );
     }
   }
 
@@ -68,7 +79,7 @@ export default class News extends Component {
   };
 
   fetchMoreData = async () => {
-    this.setState({ page: this.state.page+1, loading: true });
+    this.setState({ page: this.state.page + 1, loading: true });
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -83,40 +94,48 @@ export default class News extends Component {
   render() {
     return (
       <div className="container text-center mt-3">
-        <h1>VartaSamachar - Top {this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)} Headlines!</h1>
-        {/* {this.state.loading && <Spinner />} */}
+        <h1>
+          VartaSamachar - Top{" "}
+          {this.props.category.charAt(0).toUpperCase() +
+            this.props.category.slice(1)}{" "}
+          Headlines!
+        </h1>
+        {this.state.loading && <Spinner />}
 
         <InfiniteScroll
           dataLength={this.state.articles.length}
           next={this.fetchMoreData}
-          hasMore={true}
-          loader={this.state.loading && <Spinner />}
+          hasMore={this.state.articles.length < this.state.totalResults}
+          loader={<Spinner />}
         >
-
-        <div className="row mt-3">
-          {
-            this.state.articles
-              .filter(
-                (element) =>
-                  element.title && element.description && element.urlToImage
-              )
-              .map((element) => {
-                return (
-                  <div className="col-md-3 mt-3" key={element.url}>
-                    <NewsItem
-                      title={element.title.slice(0, 45)}
-                      description={element.description.slice(0, 55)}
-                      imageUrl={element.urlToImage}
-                      newsUrl={element.url}
-                      author={element.author ? element.author.slice(0, 30) : "Unknown"}
-                      date={new Date(element.publishedAt).toGMTString()}
-                      source={element.source.name}
-                    />
-                  </div>
-                );
-              })}
-        </div>
-
+          <div className="container">
+            <div className="row mt-3">
+              {this.state.articles
+                .filter(
+                  (element) =>
+                    element.title && element.description && element.urlToImage
+                )
+                .map((element) => {
+                  return (
+                    <div className="col-md-3 mt-3" key={element.url}>
+                      <NewsItem
+                        title={element.title.slice(0, 45)}
+                        description={element.description.slice(0, 55)}
+                        imageUrl={element.urlToImage}
+                        newsUrl={element.url}
+                        author={
+                          element.author
+                            ? element.author.slice(0, 30)
+                            : "Unknown"
+                        }
+                        date={new Date(element.publishedAt).toGMTString()}
+                        source={element.source.name}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
         </InfiniteScroll>
 
         {/* <div
