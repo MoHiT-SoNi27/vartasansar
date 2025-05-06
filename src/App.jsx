@@ -43,4 +43,4 @@ function App() {
 export default App
 
 
-// 9946f9d10838b4bb10ba730391ccfa4346
+// set env variables on netlify
