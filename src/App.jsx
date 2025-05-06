@@ -11,7 +11,7 @@ import { useState } from 'react'
 function App() {
   const apiKey = import.meta.env.VITE_NEWS_API_KEY;
   const [progress, setProgress] = useState(0);
-  console.log("API Key from .env:", apiKey);
+  // console.log("API Key from .env:", apiKey);
 
   return (
     <Router>

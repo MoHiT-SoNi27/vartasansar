@@ -26,3 +26,6 @@
   for = "/*.html"
   [headers.values]
     Content-Type = "text/html"
+
+[functions]
+  directory = "netlify/functions"

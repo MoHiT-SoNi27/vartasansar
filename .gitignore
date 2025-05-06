@@ -23,3 +23,5 @@ node_modules
 
 # Ignore environment variables
 .env
+# Local Netlify folder
+.netlify
