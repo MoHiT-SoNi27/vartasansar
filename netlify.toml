@@ -7,6 +7,11 @@
   to = "/index.html"
   status = 200
 
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/news-api-proxy"
+  status = 200
+
 [[headers]]
   for = "/*.js"
   [headers.values]
