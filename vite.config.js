@@ -6,6 +6,10 @@ export default defineConfig({
   server: {
     open: true,
   },
+  build: {
+    outDir: 'dist', // Ensure this is the correct output folder
+    sourcemap: true,
+  },
   plugins: [react()],
   base: '/', // This is important for Netlify
 })
