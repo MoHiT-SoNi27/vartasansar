@@ -17,7 +17,7 @@ const News = (props) => {
       setInitialLoading(true);
       setPage(1);
 
-      const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=1&pageSize=${props.pageSize}`;
+      const url = `/.netlify/functions/fetchNews?country=${props.country}&category=${props.category}&apiKey=9946f9d5838b4bb5ba730391ccfa4346&page=1&pageSize=${props.pageSize}`;
       const data = await fetch(url);
       props.setProgress(30);
       const parsedData = await data.json();
