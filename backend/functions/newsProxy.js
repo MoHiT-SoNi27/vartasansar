@@ -3,7 +3,7 @@ export async function handler(event) {
     const { country, category, page, pageSize } = event.queryStringParameters;
 
     // API URL with all query params
-    const url = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`;
+    const url = `/.netlify/functions/newsProxy?country=${props.country}&category=${props.category}&page=1&pageSize=${props.pageSize}`;
     
     try {
         const response = await fetch(url);

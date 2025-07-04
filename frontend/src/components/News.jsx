@@ -10,26 +10,38 @@ const News = (props) => {
   const [totalResults, setTotalResults] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null); // added error state
 
   useEffect(() => {
     const fetchInitialNews = async () => {
-      props.setProgress(10);
-      setInitialLoading(true);
-      setPage(1);
+      try {
+        props.setProgress(10);
+        setInitialLoading(true);
+        setPage(1);
 
-      const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=1&pageSize=${props.pageSize}`;
-      
-      const data = await fetch(url);
-      props.setProgress(30);
-      const parsedData = await data.json();
-      props.setProgress(70);
+        const url = `/.netlify/functions/newsProxy?country=${props.country}&category=${props.category}&page=1&pageSize=${props.pageSize}`;
+        
+        const response = await fetch(url);
+        props.setProgress(30);
 
-      setArticles(parsedData.articles);
-      setTotalResults(parsedData.totalResults);
-      setInitialLoading(false);
-      setLoadingMore(false);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      props.setProgress(100);
+        const parsedData = await response.json();
+        props.setProgress(70);
+
+        setArticles(parsedData.articles || []); // null-safe
+        setTotalResults(parsedData.totalResults || 0);
+        setError(null); // clear previous errors if any
+      } catch (err) {
+        console.error("Failed fetching news:", err);
+        setError("Failed to load news. Please try again later.");
+      } finally {
+        setInitialLoading(false);
+        setLoadingMore(false);
+        props.setProgress(100);
+      }
     };
 
     document.title = `${props.category.charAt(0).toUpperCase() + props.category.slice(1)} - VartaSamachar`;
@@ -40,14 +52,26 @@ const News = (props) => {
     const nextPage = page + 1;
     setLoadingMore(true);
 
-    const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${nextPage}&pageSize=${props.pageSize}`;
-    const data = await fetch(url);
-    const parsedData = await data.json();
+    try {
+      const url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${nextPage}&pageSize=${props.pageSize}`;
+      const response = await fetch(url);
 
-    setArticles(prev => prev.concat(parsedData.articles));
-    setTotalResults(parsedData.totalResults);
-    setPage(nextPage);
-    setLoadingMore(false);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const parsedData = await response.json();
+
+      setArticles(prev => prev.concat(parsedData.articles || []));
+      setTotalResults(parsedData.totalResults || 0);
+      setPage(nextPage);
+      setError(null);
+    } catch (err) {
+      console.error("Failed fetching more news:", err);
+      setError("Failed to load more news. Please try again later.");
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   return (
@@ -59,32 +83,40 @@ const News = (props) => {
 
       {initialLoading && <Spinner />}
 
-      <InfiniteScroll
-        dataLength={articles.length}
-        next={fetchMoreData}
-        hasMore={articles.length < totalResults}
-        loader={!initialLoading && loadingMore && <Spinner />}
-      >
-        <div className="container">
-          <div className="row mt-3">
-            {!initialLoading && articles
-              .filter(article => article.title && article.description && article.urlToImage)
-              .map((article, index) => (
-                <div className="col-md-3 mt-3" key={article.url + index}>
-                  <NewsItem
-                    title={article.title.slice(0, 45)}
-                    description={article.description.slice(0, 55)}
-                    imageUrl={article.urlToImage}
-                    newsUrl={article.url}
-                    author={article.author ? article.author.slice(0, 30) : "Unknown"}
-                    date={new Date(article.publishedAt).toGMTString()}
-                    source={article.source.name}
-                  />
-                </div>
-              ))}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {!error && (
+        <InfiniteScroll
+          dataLength={articles.length}
+          next={fetchMoreData}
+          hasMore={articles.length < totalResults}
+          loader={!initialLoading && loadingMore && <Spinner />}
+        >
+          <div className="container">
+            <div className="row mt-3">
+              {!initialLoading && articles.length > 0 ? (
+                articles
+                  .filter(article => article.title && article.description && article.urlToImage)
+                  .map((article, index) => (
+                    <div className="col-md-3 mt-3" key={article.url + index}>
+                      <NewsItem
+                        title={article.title.slice(0, 45)}
+                        description={article.description.slice(0, 55)}
+                        imageUrl={article.urlToImage}
+                        newsUrl={article.url}
+                        author={article.author ? article.author.slice(0, 30) : "Unknown"}
+                        date={new Date(article.publishedAt).toGMTString()}
+                        source={article.source?.name || "Unknown"}
+                      />
+                    </div>
+                  ))
+              ) : (
+                !initialLoading && <p>No articles found.</p>
+              )}
+            </div>
           </div>
-        </div>
-      </InfiniteScroll>
+        </InfiniteScroll>
+      )}
     </div>
   );
 };
@@ -105,6 +137,7 @@ News.propTypes = {
 };
 
 export default News;
+
 
 
 
