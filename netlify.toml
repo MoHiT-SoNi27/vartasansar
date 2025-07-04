@@ -1,38 +1,21 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
-  functions = "netlify/functions"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/dist"
+  functions = "backend/functions"
 
 [dev]
-  command = "vite"
-  port = 5173
-  targetPort = 8888
-  functions = "netlify/functions"
+  command = "npm run dev"
+  functions = "backend/functions"
+  framework = "vite"
+  targetPort = 5173
+  port = 8888
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Content-Type = "application/javascript"
-
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Content-Type = "text/css"
-
-[[headers]]
-  for = "/*.html"
-  [headers.values]
-    Content-Type = "text/html"
-
-[functions]
-  directory = "netlify/functions"
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
