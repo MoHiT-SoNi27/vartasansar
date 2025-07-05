@@ -53,7 +53,7 @@ const News = (props) => {
     setLoadingMore(true);
 
     try {
-      const url = `/.netlify/functions/newsProxy?country=${props.country}&category=${props.category}&page=1&pageSize=${props.pageSize}`;
+      const url = `/.netlify/functions/newsProxy?country=${props.country}&category=${props.category}&page=${nextPage}&pageSize=${props.pageSize}`;
       const response = await fetch(url);
 
       if (!response.ok) {
